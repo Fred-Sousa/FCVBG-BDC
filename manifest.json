@@ -1,0 +1,21 @@
+{
+  "short_name": "FCVBG",
+  "name": "FCVBG - Espace Commande & Devis",
+  "icons": [
+    {
+      "src": "LogoFCVBG-Final_3.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "LogoFCVBG-Final_3.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "background_color": "#163964",
+  "theme_color": "#163964",
+  "display": "standalone",
+  "orientation": "any"
+}

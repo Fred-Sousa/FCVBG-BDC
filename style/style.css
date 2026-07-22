@@ -1,0 +1,208 @@
+/* ==========================================================================
+   FCVBG - Espace Commande & Devis
+   Feuille de style externe (extraite de index.html)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Polices personnalisées
+   Ces polices étaient chargées via Google Fonts mais jamais appliquées :
+   - Plus Jakarta Sans -> police de corps de texte
+   - Outfit            -> police des titres (classe .font-heading, utilisée
+                           dans le HTML mais qui n'existait dans aucune CSS)
+   -------------------------------------------------------------------------- */
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.font-heading {
+    font-family: 'Outfit', sans-serif;
+}
+
+/* ==========================================================================
+   Impression / Export PDF
+   Remplace les 3 blocs @media print dupliqués et partiellement contradictoires
+   (portrait 8px / portrait+grille 5 colonnes / paysage 11px) par une seule
+   version cohérente, au format retenu en dernier : A4 Paysage.
+   ========================================================================== */
+@media print {
+
+    /* 1. Format A4 Paysage : nécessaire pour faire tenir les 9 colonnes */
+    @page {
+        size: A4 landscape;
+        margin: 1cm;
+    }
+
+    /* 2. Forcer l'impression des couleurs de fond (bandeau bleu, totaux) */
+    body {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+
+    /* 3. Masquer les éléments interactifs (boutons, corbeilles, etc.) */
+    button, .btn, .no-print, [onclick*="remove"], [onclick*="delete"], [onclick*="add"] {
+        display: none !important;
+    }
+
+    /* 4. Débloquer la mise en page (plein format, sans les contraintes mobile) */
+    html, body, main, section {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+    }
+
+    /* 5. Détails Commande : forcer l'alignement sur 5 colonnes côte à côte */
+    .grid {
+        display: grid !important;
+        grid-template-columns: repeat(5, 1fr) !important;
+        gap: 6px !important;
+    }
+
+    /* 6. Débloquer le conteneur du tableau (plus de scroll, tout est visible) */
+    .overflow-x-auto, .overflow-hidden {
+        overflow: visible !important;
+        display: block !important;
+    }
+
+    /* 7. Structure du tableau : affichage classique, largeur automatique */
+    table {
+        width: 100% !important;
+        table-layout: auto !important;
+        border-collapse: collapse !important;
+        display: table !important;
+    }
+    thead { display: table-header-group !important; }
+    tbody { display: table-row-group !important; }
+    tr    { display: table-row !important; }
+    th, td { display: table-cell !important; }
+
+    th, td {
+        font-size: 11px !important;
+        padding: 6px 4px !important;
+        white-space: normal !important;
+        vertical-align: middle !important;
+    }
+
+    /* 8. Champs de saisie : lisibles, sans bordure ni fond, texte noir */
+    input, select, textarea {
+        border: none !important;
+        background: transparent !important;
+        width: 100% !important;
+        min-width: 45px !important;
+        box-shadow: none !important;
+        outline: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        text-align: center;
+        color: black !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+    }
+}
+
+/* ==========================================================================
+   Tableau d'articles en mode "carte" sur mobile
+   Chaque <td> a déjà un attribut data-label (prévu à l'origine, jamais
+   exploité) : on l'utilise pour afficher l'étiquette du champ et pour
+   réorganiser chaque <tr> en carte lisible au lieu d'un tableau écrasé.
+   ========================================================================== */
+@media (max-width: 768px) {
+    #order-table thead {
+        display: none;
+    }
+
+    #order-table,
+    #order-table tbody {
+        display: block;
+        width: 100%;
+    }
+
+    #order-table tr {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 10px 12px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 12px 12px 12px 12px;
+        margin-bottom: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    #order-table td {
+        display: block;
+        padding: 0 !important;
+        border: none !important;
+        text-align: left !important;
+    }
+
+    /* Bouton supprimer : coin haut-droit de la carte */
+    #order-table td[data-label="Supprimer"] {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        order: 1;
+    }
+
+    /* Miniature : en haut à gauche */
+    #order-table td[data-label="Visuel"] {
+        order: 0;
+        width: 56px;
+        flex-shrink: 0;
+    }
+
+    /* Catégorie : à côté de la miniature */
+    #order-table td[data-label="Catégorie"] {
+        order: 2;
+        flex: 1;
+        min-width: 100px;
+        padding-right: 34px !important;
+    }
+
+    /* Référence et Désignation : pleine largeur, chacune sur leur ligne */
+    #order-table td[data-label="Référence"],
+    #order-table td[data-label="Désignation"] {
+        order: 3;
+        width: 100%;
+        flex-basis: 100%;
+    }
+
+    /* PVC / Remise / Prix Net : trio compact */
+    #order-table td[data-label="Prix PVC"],
+    #order-table td[data-label="Remise"],
+    #order-table td[data-label="Prix Net Club"] {
+        order: 4;
+        flex: 1 1 0;
+        min-width: 85px;
+    }
+
+    /* Tailles / Quantité / Total Net : trio compact */
+    #order-table td[data-label="Tailles"],
+    #order-table td[data-label="Quantité"],
+    #order-table td[data-label="Total Net"] {
+        order: 5;
+        flex: 1 1 0;
+        min-width: 75px;
+    }
+
+    /* Étiquette du champ (issue de data-label), sauf pour Visuel/Supprimer
+       qui sont déjà explicites visuellement */
+    #order-table td[data-label]:not([data-label="Supprimer"]):not([data-label="Visuel"])::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 9px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #94a3b8;
+        margin-bottom: 3px;
+    }
+}
